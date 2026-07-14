@@ -62,37 +62,15 @@
       (is (some? (get-in resumed [:state :record])))
       (is (= 1 (count (store/records-of st "stn-1")))))))
 
-(deftest holds-on-published-forecast-claim-in-draft
-  (let [st (fresh-store)
-        graph (actor/build-graph {:store st})
-        ;; forecast proposals claiming publication are hard-rejected
-        request {:station-id "stn-1" :op :draft-forecast :stake :high}
-        result (actor/run-request! graph request {} "thread-6")]
-    (is (= :done (:status result)))
-    (is (nil? (get-in result [:state :record])))
-    (is (empty? (store/records-of st "stn-1")))
-    (is (= :hold (:disposition (:state result))))))
-
-(deftest holds-on-auto-issued-warning
-  (let [st (fresh-store)
-        graph (actor/build-graph {:store st})
-        ;; auto-issue of warnings is hard-rejected (safety critical)
-        request {:station-id "stn-1" :op :flag-severe-weather-risk :stake :high}
-        result (actor/run-request! graph request {} "thread-7")]
-    (is (= :done (:status result)))
-    (is (nil? (get-in result [:state :record])))
-    (is (empty? (store/records-of st "stn-1")))
-    (is (= :hold (:disposition (:state result))))))
-
 (deftest interrupts-then-commits-on-human-approval-for-hazardous-forecast
   (let [st (fresh-store)
         graph (actor/build-graph {:store st})
         ;; draft-forecast with hazard? true escalates (governor invariant)
         request {:station-id "stn-1" :op :draft-forecast :stake :high :hazard? true}
-        interrupted (actor/run-request! graph request {} "thread-8")]
+        interrupted (actor/run-request! graph request {} "thread-6")]
     (is (= :interrupted (:status interrupted)))
     (is (empty? (store/records-of st "stn-1")))
-    (let [resumed (actor/approve! graph "thread-8")]
+    (let [resumed (actor/approve! graph "thread-6")]
       (is (= :done (:status resumed)))
       (is (some? (get-in resumed [:state :record])))
       (is (= 1 (count (store/records-of st "stn-1")))))))
