@@ -48,13 +48,13 @@ request
 
 ```bash
 # Run tests
-clj -M:test
+kbb -M:test
 
 # REPL
 clj
 
 # Build
-clj -M:package  # (if defined)
+kbb -M:package  # (if defined)
 ```
 
 ## License
