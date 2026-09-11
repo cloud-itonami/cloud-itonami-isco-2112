@@ -87,7 +87,7 @@
   actually would, and does not hand-construct proposals to force
   unreachable paths.
 
-  Usage: `clojure -M:render-html [out-file]`
+  Usage: `kbb -M:render-html [out-file]`
   (default `docs/samples/operator-console.html`)."
   (:require [jp-go-dds.skin]
             [kotoba.lang.text :as str]
@@ -224,7 +224,7 @@
      "<main>\n"
      "  <section class=\"card\">\n"
      "    <h2>Registered weather stations</h2>\n"
-     "    <p class=\"muted\">Demo snapshot — build-time-generated from <code>meteorology.store</code> via <code>meteorology.render-html</code> (<code>clojure -M:render-html</code>), regenerated nightly.</p>\n"
+     "    <p class=\"muted\">Demo snapshot — build-time-generated from <code>meteorology.store</code> via <code>meteorology.render-html</code> (<code>kbb -M:render-html</code>), regenerated nightly.</p>\n"
      "    <table>\n"
      "      <thead><tr><th>Station</th><th>Name</th><th>Location</th><th>Records committed</th><th>Last op status</th></tr></thead>\n"
      "      <tbody>\n"
