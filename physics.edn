@@ -1,0 +1,32 @@
+;; What this vertical's robot physically does, declared for
+;; kotoba.robotics.process (kotoba-lang/robotics). `kbb -M:physics` runs it.
+;;
+;; README: a research-support actor for weather forecasting and meteorological
+;; operations (ISCO 2112), including "Calibrate Instrument" procedures for
+;; registered weather stations. The physical work at a station is maintenance:
+;; emptying a storage precipitation gauge through its drain valve, and lifting
+;; a replacement sensor up to its mounting arm on the mast.
+;;
+;; Every number without a cited source is marked `estimate` in its :basis.
+;; Replacing an estimate with a sourced value is this bot's growth work.
+{:physics/schema "itonami.physical-ai.spec.v1"
+ :repo "cloud-itonami/cloud-itonami-isco-2112"
+ :cases
+ [{:id :storage-gauge-drain
+   :kind :tank-drain
+   :procedure "maintenance robot opens the drain valve of a storage precipitation gauge and waits until it is empty"
+   :params {:tank-area-m2 0.0314 :h-target-m 0.005 :orifice-area-m2 1.0e-4 :cd 0.62
+            :q-in-m3s 0.0 :dt-s 0.1 :max-time-s 3600.0}
+   :sweep {:param :h0-m :values [0.05 0.10 0.20 0.30 0.50]}
+   :quantity :time-to-target-s
+   :limit {:max 120.0 :basis "estimate: two minutes of the station visit budget allotted to emptying the gauge"}
+   :boundary {:lo 0.02 :hi 0.8}}
+  {:id :sensor-to-mast-arm
+   :kind :manipulator
+   :procedure "arm lifts a replacement sensor head from the service case up to the mast's mounting arm"
+   :params {:l1-m 0.55 :l2-m 0.50 :m1-kg 3.5 :m2-kg 2.5
+            :from [0.50 0.00] :to [0.25 0.95] :duration-s 3.0 :steps 500}
+   :sweep {:param :payload-kg :values [0.5 1.0 2.0 3.0 5.0]}
+   :quantity :peak-tau1-nm
+   :limit {:max 60.0 :basis "estimate: continuous shoulder torque of a light field-service arm"}
+   :boundary {:lo 0.05 :hi 20.0}}]}
